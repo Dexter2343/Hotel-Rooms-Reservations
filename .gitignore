@@ -1,0 +1,125 @@
+# =========================
+
+# Spring Boot / Java
+
+# =========================
+
+*.class
+*.log
+*.tmp
+*.swp
+*.bak
+*.orig
+
+# =========================
+
+# Build tools
+
+# =========================
+
+## Gradle
+
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+## Maven
+
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+
+# =========================
+
+# IDE
+
+# =========================
+
+## IntelliJ IDEA
+
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+## Eclipse / STS
+
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings/
+.springBeans
+.sts4-cache
+bin/
+
+## NetBeans
+
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+## VS Code
+
+.vscode/
+
+# =========================
+
+# OS files
+
+# =========================
+
+.DS_Store
+Thumbs.db
+
+# =========================
+
+# Logs
+
+# =========================
+
+logs/
+*.log
+
+# =========================
+
+# Environment variables
+
+# =========================
+
+.env
+.env.*
+
+# =========================
+
+# Spring Boot specific
+
+# =========================
+
+application-local.yml
+application-local.properties
+
+# =========================
+
+# Test / coverage
+
+# =========================
+
+/coverage/
+/reports/
+
+# =========================
+
+# Misc
+
+# =========================
+
+*.jar
+*.war
+*.ear
