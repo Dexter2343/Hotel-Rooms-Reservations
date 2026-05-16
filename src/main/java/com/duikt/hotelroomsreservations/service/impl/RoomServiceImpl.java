@@ -15,7 +15,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RoomServiceImpl implements RoomService {
 
-    private final RoomService roomService;
     private final RoomRepo roomRepo;
 
     @Override
@@ -30,7 +29,7 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public Room updateRoom(Long id, String roomNumber, String type, double price, boolean isAvailable) {
+    public Room updateRoom(Long id, String roomNumber, String type, double price, boolean isAvailable, LocalDateTime busyTo) {
         Room room = roomRepo.findById(id).orElseThrow(()
                 -> new RoomNotFoudException("Room not found with id " + id));
         room.setRoomNumber(roomNumber);

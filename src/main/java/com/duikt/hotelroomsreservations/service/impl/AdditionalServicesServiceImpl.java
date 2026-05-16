@@ -12,23 +12,22 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AdditionalServicesServiceImpl implements AdditionalServicesService {
 
-    private final AdditionalServicesService additionalServicesService;
     private final AdditionalServicesRepo additionalServiceRepo;
 
     @Override
-    public AdditionalServices createAdditionalService(String roomType, double price) {
+    public AdditionalServices createAdditionalService(String serviceName, double price) {
         AdditionalServices additionalServices = AdditionalServices.builder()
-                .roomType(roomType)
+                .serviceName(serviceName)
                 .price(price)
                 .build();
         return additionalServiceRepo.save(additionalServices);
     }
 
     @Override
-    public AdditionalServices updateAdditionalService(Long id, String roomType, double price) {
+    public AdditionalServices updateAdditionalService(Long id, String serviceName, double price) {
     AdditionalServices additionalServices = additionalServiceRepo.findById(id).orElseThrow(() ->
                 new ServiceNotFoundException("Service not found with id " + id));
-        additionalServices.setRoomType(roomType);
+        additionalServices.setServiceName(serviceName);
         additionalServices.setPrice(price);
     return additionalServiceRepo.save(additionalServices);
     }

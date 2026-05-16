@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface RoomService {
     Room createRoom(String roomNumber, String type, double price, boolean isAvailable);
-    Room updateRoom(Long id, String roomNumber, String type, double price, boolean isAvailable);
+    Room updateRoom(Long id, String roomNumber, String type, double price, boolean isAvailable, LocalDateTime busyTo);
     Room getRoomById(Long id);
     List<Room> getAllRooms();
     Room buyRoom(Long id, User user, String type, double price, boolean isAvailable, LocalDateTime buyDate, LocalDateTime busyTo);
