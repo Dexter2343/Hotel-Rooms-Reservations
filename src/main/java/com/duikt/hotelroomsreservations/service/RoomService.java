@@ -1,0 +1,16 @@
+package com.duikt.hotelroomsreservations.service;
+
+import com.duikt.hotelroomsreservations.entity.Room;
+import com.duikt.hotelroomsreservations.entity.User;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+public interface RoomService {
+    Room createRoom(String roomNumber, String type, double price, boolean isAvailable);
+    Room updateRoom(Long id, String roomNumber, String type, double price, boolean isAvailable);
+    Room getRoomById(Long id);
+    List<Room> getAllRooms();
+    Room buyRoom(Long id, User user, String type, double price, boolean isAvailable, LocalDateTime buyDate, LocalDateTime busyTo);
+    void deleteRoom(Long id);
+}
