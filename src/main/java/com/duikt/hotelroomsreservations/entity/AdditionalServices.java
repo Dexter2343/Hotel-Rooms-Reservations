@@ -18,4 +18,12 @@ public class AdditionalServices {
     private Long id;
     private String serviceName;
     private double price;
+
+    @ManyToOne()
+    @JoinColumn(name = "room_id")
+    private Room room;
+
+    @ManyToOne()
+    @JoinColumn(name = "user_id")
+    private User user;
 }

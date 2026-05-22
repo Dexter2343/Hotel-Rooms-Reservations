@@ -25,6 +25,10 @@ public class Room {
     private LocalDateTime busyTo;
     private LocalDateTime discountTo;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
 
     public void setIsAvailable(boolean isAvailable) {
         this.isAvailable = isAvailable;

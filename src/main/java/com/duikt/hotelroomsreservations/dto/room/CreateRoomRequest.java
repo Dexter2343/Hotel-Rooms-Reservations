@@ -23,10 +23,9 @@ public class CreateRoomRequest {
     @NotNull(message = "Availability is required")
     private Boolean isAvailable;
 
-    @NotNull(message = "Buy date is required")
     private LocalDateTime buyDate;
 
-    @NotNull(message = "Busy to date is required")
+
     private LocalDateTime busyTo;
 
     private LocalDateTime discountTo;

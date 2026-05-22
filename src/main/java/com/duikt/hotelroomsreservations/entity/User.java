@@ -4,6 +4,8 @@ package com.duikt.hotelroomsreservations.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Data
 @AllArgsConstructor
@@ -19,4 +21,10 @@ public class User {
     private String password;
     private String role;
     private double balance;
+
+    @OneToMany(mappedBy = "user")
+    private List<Room> rooms;
+
+    @OneToMany(mappedBy = "user")
+    private List<AdditionalServices> additionalServices;
 }

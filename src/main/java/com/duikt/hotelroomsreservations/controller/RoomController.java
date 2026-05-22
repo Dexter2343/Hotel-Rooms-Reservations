@@ -1,11 +1,11 @@
 package com.duikt.hotelroomsreservations.controller;
 
 import com.duikt.hotelroomsreservations.dto.room.CreateRoomRequest;
+import com.duikt.hotelroomsreservations.dto.room.PurchaseRoomRequest;
 import com.duikt.hotelroomsreservations.dto.room.UpdateRoomRequest;
 import com.duikt.hotelroomsreservations.entity.Room;
 import com.duikt.hotelroomsreservations.service.RoomService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,13 +42,33 @@ public class RoomController {
     }
 
     @GetMapping("/rooms/{id}")
-    public Room getRoom(@PathVariable Long id) {
+    public Room getRoomById(@PathVariable Long id) {
         return roomService.getRoomById(id);
     }
 
     @GetMapping("/rooms")
     public List<Room> getAllRooms() {
         return roomService.getAllRooms();
+    }
+
+
+    @GetMapping("/rooms/users/{id}")
+    public List<Room> getRoomsByUserId(@PathVariable Long id) {
+        return roomService.getRoomByUserId(id);
+    }
+
+
+    @GetMapping("/rooms/number/{roomNumber}")
+    public List<Room> getRoomsByRoomNumber(@PathVariable String roomNumber) {
+        return roomService.getRoomByRoomNumber(roomNumber);
+    }
+
+
+    @PutMapping("/rooms/{roomId}/users/{userId}/buy")
+    public ResponseEntity<Room> buyRoom(@PathVariable Long roomId, @PathVariable Long userId, @RequestBody UpdateRoomRequest request) {
+        roomService.buyRoom(roomId, userId, request.getType(),
+                request.getPrice(), request.isAvailable(), request.getBusyTo());
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/rooms/{id}")
