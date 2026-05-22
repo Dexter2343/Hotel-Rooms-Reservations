@@ -19,18 +19,18 @@ public class RoomController {
 
     @PostMapping("/rooms")
     public ResponseEntity<Room> createRoom(@RequestBody CreateRoomRequest request) {
-        roomService.createRoom(
+      Room createdRoom = roomService.createRoom(
                 request.getRoomNumber(),
                 request.getType(),
                 request.getPrice(),
                 request.getIsAvailable()
         );
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(createdRoom);
     }
 
     @PutMapping("/rooms/{id}")
     public ResponseEntity<Room> updateRoom(@PathVariable Long id, @RequestBody UpdateRoomRequest request) {
-        roomService.updateRoom(
+     Room updateRoom = roomService.updateRoom(
                 id,
                 request.getRoomNumber(),
                 request.getType(),
@@ -38,7 +38,7 @@ public class RoomController {
                 request.isAvailable(),
                 request.getBusyTo()
         );
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(updateRoom);
     }
 
     @GetMapping("/rooms/{id}")
@@ -66,9 +66,9 @@ public class RoomController {
 
     @PutMapping("/rooms/{roomId}/users/{userId}/buy")
     public ResponseEntity<Room> buyRoom(@PathVariable Long roomId, @PathVariable Long userId, @RequestBody UpdateRoomRequest request) {
-        roomService.buyRoom(roomId, userId, request.getType(),
+     Room buy = roomService.buyRoom(roomId, userId, request.getType(),
                 request.getPrice(), request.isAvailable(), request.getBusyTo());
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(buy);
     }
 
     @DeleteMapping("/rooms/{id}")

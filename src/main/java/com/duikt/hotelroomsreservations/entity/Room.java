@@ -1,8 +1,8 @@
 package com.duikt.hotelroomsreservations.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.time.LocalDateTime;
 
 @Entity
@@ -10,8 +10,6 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
 @Table(name = "rooms")
 public class Room {
     @Id
@@ -27,8 +25,8 @@ public class Room {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
-
 
     public void setIsAvailable(boolean isAvailable) {
         this.isAvailable = isAvailable;
