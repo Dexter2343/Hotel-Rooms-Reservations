@@ -16,7 +16,7 @@ import static org.springframework.http.HttpMethod.*;
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http){
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/error").permitAll()
@@ -25,7 +25,10 @@ public class SecurityConfig {
                         .requestMatchers(DELETE, "/api/users/{id}").hasRole("ADMIN")
                         .requestMatchers(GET, "/api/users").hasRole("ADMIN")
                         .requestMatchers(PUT,"/api/rooms/*/users/*/buy").hasRole("USER")
+                        .requestMatchers(PUT, "/api/additional-services/buy/*/room/*/user/*").hasRole("USER")
                         .requestMatchers("/api/rooms/**").hasRole("ADMIN")
+                        .requestMatchers("/api/additional-services/**").hasRole("ADMIN")
+
 
                         .anyRequest().authenticated()
 

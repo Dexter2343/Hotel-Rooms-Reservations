@@ -1,6 +1,7 @@
 package com.duikt.hotelroomsreservations.controller;
 
 import com.duikt.hotelroomsreservations.dto.additionalService.CreateAdditionalServicesRequest;
+import com.duikt.hotelroomsreservations.dto.additionalService.PurchaseServiceRequest;
 import com.duikt.hotelroomsreservations.dto.additionalService.UpdateAdditionalServiceRequest;
 import com.duikt.hotelroomsreservations.entity.AdditionalServices;
 import com.duikt.hotelroomsreservations.service.AdditionalServicesService;
@@ -33,7 +34,18 @@ public class AdditionalServicesController {
                 request.getServiceName(),
                 request.getPrice()
         );
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(dto);
+    }
+
+    @PutMapping("additional-services/buy/{serviceId}/room/{roomId}/user/{userId}")
+    public ResponseEntity<AdditionalServices> buyService(@PathVariable Long serviceId,
+                                                         @PathVariable Long roomId,
+                                                         @PathVariable Long userId,
+                                                         @RequestBody PurchaseServiceRequest request) {
+        AdditionalServices dto  = additionalServicesService.buyService(serviceId, roomId, userId,
+                request.getServiceName(), request.getPrice());
+
+        return ResponseEntity.ok(dto);
     }
 
     @GetMapping("/additional-services/{id}")
