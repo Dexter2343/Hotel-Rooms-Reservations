@@ -3,6 +3,7 @@ package com.duikt.hotelroomsreservations.service.impl;
 import com.duikt.hotelroomsreservations.entity.Room;
 import com.duikt.hotelroomsreservations.entity.User;
 import com.duikt.hotelroomsreservations.exceptions.BalanceException;
+import com.duikt.hotelroomsreservations.exceptions.ReservationException;
 import com.duikt.hotelroomsreservations.exceptions.RoomNotFoudException;
 import com.duikt.hotelroomsreservations.exceptions.UserNotFoundException;
 import com.duikt.hotelroomsreservations.repository.RoomRepo;
@@ -67,26 +68,29 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public Room buyRoom(Long roomId, Long userId, String type, double price, boolean isAvailable, LocalDateTime busyTo) {
         Room room = roomRepo.findById(roomId).orElseThrow(()
-                -> new RoomNotFoudException("Room not found with id " + roomId)
-        );
+                -> new RoomNotFoudException("Room not found with id " + roomId));
 
         User user = userRepo.findById(userId).orElseThrow(()
-                -> new UserNotFoundException("User not found with id " + userId)
-        );
+                -> new UserNotFoundException("User not found with id " + userId));
+
+        if (!room.isAvailable()) {
+            throw new ReservationException("Room is not available");
+        }
+
+        if (user.getBalance() < price) {
+            throw new BalanceException("Not enough balance");
+        }
 
         LocalDateTime buyDate = LocalDateTime.now();
 
-        if(user.getBalance() < price){
-            throw new BalanceException("Not enough balance");
-        } else {
-            room.setUser(user);
-            room.setIsAvailable(false);
-            room.setBuyDate(buyDate);
-            room.setBusyTo(busyTo);
-            room.setPrice(price);
-            user.setBalance(user.getBalance() - price);
-            return roomRepo.save(room);
-        }
+        room.setUser(user);
+        room.setIsAvailable(false);
+        room.setBuyDate(buyDate);
+        room.setBusyTo(busyTo);
+        room.setPrice(price);
+        user.setBalance(user.getBalance() - price);
+
+        return roomRepo.save(room);
     }
 
     @Override

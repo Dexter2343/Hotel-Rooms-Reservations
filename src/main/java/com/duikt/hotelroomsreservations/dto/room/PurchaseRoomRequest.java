@@ -4,7 +4,7 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
  /**
-    * TODO Додати перевірку чи вільна кімната і якщо вона зайнята кидати ReservationException
+    * TODO Додати сезонні знижки для кімнат, якщо дата спливає кидати DiscountException
   */
  @Data
 public class PurchaseRoomRequest {
