@@ -3,10 +3,7 @@ package com.duikt.hotelroomsreservations.service.impl;
 import com.duikt.hotelroomsreservations.entity.AdditionalServices;
 import com.duikt.hotelroomsreservations.entity.Room;
 import com.duikt.hotelroomsreservations.entity.User;
-import com.duikt.hotelroomsreservations.exceptions.ReservationException;
-import com.duikt.hotelroomsreservations.exceptions.RoomNotFoudException;
-import com.duikt.hotelroomsreservations.exceptions.ServiceNotFoundException;
-import com.duikt.hotelroomsreservations.exceptions.UserNotFoundException;
+import com.duikt.hotelroomsreservations.exceptions.*;
 import com.duikt.hotelroomsreservations.repository.AdditionalServicesRepo;
 import com.duikt.hotelroomsreservations.repository.RoomRepo;
 import com.duikt.hotelroomsreservations.repository.UserRepo;
@@ -70,10 +67,14 @@ public class AdditionalServicesServiceImpl implements AdditionalServicesService 
 
         AdditionalServices service = additionalServiceRepo.findById(serviceId).orElseThrow(()
                 -> new ServiceNotFoundException("Service not found"));
-
-        service.setRoom(room);
-        service.setUser(user);
-        service.setPrice(price);
-        return additionalServiceRepo.save(service);
+        if(user.getBalance() < price){
+            throw new BalanceException("Not enough balance");
+        } else{
+            service.setRoom(room);
+            service.setUser(user);
+            service.setPrice(price);
+            user.setBalance(user.getBalance() - price);
+            return additionalServiceRepo.save(service);
+        }
     }
 }

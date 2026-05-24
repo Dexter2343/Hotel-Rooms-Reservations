@@ -2,6 +2,7 @@ package com.duikt.hotelroomsreservations.service.impl;
 
 import com.duikt.hotelroomsreservations.entity.Room;
 import com.duikt.hotelroomsreservations.entity.User;
+import com.duikt.hotelroomsreservations.exceptions.BalanceException;
 import com.duikt.hotelroomsreservations.exceptions.RoomNotFoudException;
 import com.duikt.hotelroomsreservations.exceptions.UserNotFoundException;
 import com.duikt.hotelroomsreservations.repository.RoomRepo;
@@ -75,12 +76,17 @@ public class RoomServiceImpl implements RoomService {
 
         LocalDateTime buyDate = LocalDateTime.now();
 
-        room.setUser(user);
-        room.setIsAvailable(false);
-        room.setBuyDate(buyDate);
-        room.setBusyTo(busyTo);
-        room.setPrice(price);
-    return roomRepo.save(room);
+        if(user.getBalance() < price){
+            throw new BalanceException("Not enough balance");
+        } else {
+            room.setUser(user);
+            room.setIsAvailable(false);
+            room.setBuyDate(buyDate);
+            room.setBusyTo(busyTo);
+            room.setPrice(price);
+            user.setBalance(user.getBalance() - price);
+            return roomRepo.save(room);
+        }
     }
 
     @Override

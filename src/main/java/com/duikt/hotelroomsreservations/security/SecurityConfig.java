@@ -21,7 +21,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/error").permitAll()
                         .requestMatchers(POST, "/api/users").permitAll()
-                        .requestMatchers(PUT, "/api/users/{id}").hasRole("USER")
+                        .requestMatchers(PUT, "/api/users/{id}").hasRole("ADMIN")
                         .requestMatchers(DELETE, "/api/users/{id}").hasRole("ADMIN")
                         .requestMatchers(GET, "/api/users").hasRole("ADMIN")
                         .requestMatchers(PUT,"/api/rooms/*/users/*/buy").hasRole("USER")

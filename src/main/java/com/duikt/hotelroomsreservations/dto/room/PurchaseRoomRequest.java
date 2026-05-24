@@ -4,9 +4,7 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
  /**
-  * TODO Додати логіку відмімання грошей з балансу юзера при покупці кімнати та послуг
-  * А в разі помилки кидати BalanceException з відповідним повідомленням
-  * TODO Додати перевірку чи вільна кімната і якщо вона зайнята кидати ReservationException
+    * TODO Додати перевірку чи вільна кімната і якщо вона зайнята кидати ReservationException
   */
  @Data
 public class PurchaseRoomRequest {
