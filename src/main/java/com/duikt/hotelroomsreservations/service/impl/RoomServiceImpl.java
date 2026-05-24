@@ -8,6 +8,7 @@ import com.duikt.hotelroomsreservations.repository.RoomRepo;
 import com.duikt.hotelroomsreservations.repository.UserRepo;
 import com.duikt.hotelroomsreservations.service.RoomService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.text.DateFormat;
@@ -16,6 +17,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Formatter;
 import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 @RequiredArgsConstructor
@@ -42,6 +45,7 @@ public class RoomServiceImpl implements RoomService {
         room.setRoomNumber(roomNumber);
         room.setType(type);
         room.setPrice(price);
+        room.setBusyTo(busyTo);
         room.setIsAvailable(isAvailable);
         return roomRepo.save(room);
     }
@@ -87,6 +91,24 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public List<Room> getRoomByRoomNumber(String roomNumber) {
         return roomRepo.getRoomsByRoomNumber(roomNumber);
+    }
+
+    @Scheduled(fixedRate = 60000)
+    public void freeExpiredRooms(){
+        List<Room> expiredRooms = roomRepo.findAll()
+                .stream()
+                .filter(r -> r.getBusyTo() != null
+                        && r.getBusyTo().isBefore(LocalDateTime.now())
+                        && !r.isAvailable())
+                .toList();
+        expiredRooms.forEach(room -> {
+            room.setUser(null);
+            room.setIsAvailable(true);
+            room.setBusyTo(null);
+            room.setBuyDate(null);
+        });
+
+        roomRepo.saveAll(expiredRooms);
     }
 
     @Override

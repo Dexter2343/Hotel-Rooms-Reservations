@@ -24,7 +24,7 @@ public class AdditionalServicesController {
                 request.getServiceName(),
                 request.getPrice()
         );
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(dto);
     }
 
     @PutMapping("additional-services/{id}")
