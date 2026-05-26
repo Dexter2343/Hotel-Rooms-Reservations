@@ -4,14 +4,12 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
  /**
-    * TODO Додати сезонні знижки для кімнат, якщо дата спливає кидати DiscountException
+    * TODO Рефактор оновлення кімнат: прибрати булеан та термін оренди з оновлнення
+  *  TODO Зробити оновлення ціни зі знижки на дефолтну яка була до знижки
+  *
   */
  @Data
 public class PurchaseRoomRequest {
-    private String roomNumber;
-    private String type;
-    private double price;
-    private LocalDateTime buyDate;
     private LocalDateTime busyTo;
-    private boolean isAvailable;
+    private LocalDateTime discountTo;
 }

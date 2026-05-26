@@ -11,7 +11,9 @@ public interface RoomService {
     Room updateRoom(Long id, String roomNumber, String type, double price, boolean isAvailable, LocalDateTime busyTo);
     Room getRoomById(Long id);
     List<Room> getAllRooms();
-    Room buyRoom(Long  roomId, Long userId, String type, double price, boolean isAvailable, LocalDateTime busyTo);
+    Room buyRoomWithDiscount(Long roomId, Long userId, LocalDateTime busyTo, LocalDateTime discountTo);
+    Room buyRoom(Long roomId, Long userId, LocalDateTime busyTo);
+    Room setDiscountToRoom(Long roomId, LocalDateTime discountTo);
     List<Room> getRoomByUserId(Long userId);
     List<Room> getRoomByRoomNumber(String roomNumber);
     void deleteRoom(Long id);

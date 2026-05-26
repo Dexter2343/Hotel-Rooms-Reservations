@@ -55,7 +55,7 @@ public class AdditionalServicesServiceImpl implements AdditionalServicesService 
     }
 
     @Override
-    public AdditionalServices buyService(Long serviceId, Long roomId, Long userId, String serviceName, double price) {
+    public AdditionalServices buyService(Long serviceId, Long roomId, Long userId) {
         Room room = roomRepo.getRoomsByUserId(userId)
                 .stream()
                 .filter(r -> r.getId() == roomId)
@@ -67,13 +67,13 @@ public class AdditionalServicesServiceImpl implements AdditionalServicesService 
 
         AdditionalServices service = additionalServiceRepo.findById(serviceId).orElseThrow(()
                 -> new ServiceNotFoundException("Service not found"));
-        if(user.getBalance() < price){
+        if(user.getBalance() < service.getPrice()){
             throw new BalanceException("Not enough balance");
         } else{
             service.setRoom(room);
             service.setUser(user);
-            service.setPrice(price);
-            user.setBalance(user.getBalance() - price);
+            service.getPrice();
+            user.setBalance(user.getBalance() - service.getPrice());
             return additionalServiceRepo.save(service);
         }
     }

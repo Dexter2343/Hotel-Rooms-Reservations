@@ -11,4 +11,5 @@ public class UpdateRoomRequest {
     private double price;
     private boolean isAvailable;
     private LocalDateTime busyTo;
+    private LocalDateTime discountTo;
 }

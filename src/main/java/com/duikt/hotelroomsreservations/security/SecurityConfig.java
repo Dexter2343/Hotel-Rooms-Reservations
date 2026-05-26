@@ -20,18 +20,35 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/error").permitAll()
+
                         .requestMatchers(POST, "/api/users").permitAll()
+
                         .requestMatchers(PUT, "/api/users/{id}").hasRole("ADMIN")
                         .requestMatchers(DELETE, "/api/users/{id}").hasRole("ADMIN")
                         .requestMatchers(GET, "/api/users").hasRole("ADMIN")
-                        .requestMatchers(PUT,"/api/rooms/*/users/*/buy").hasRole("USER")
-                        .requestMatchers(PUT, "/api/additional-services/buy/*/room/*/user/*").hasRole("USER")
-                        .requestMatchers("/api/rooms/**").hasRole("ADMIN")
-                        .requestMatchers("/api/additional-services/**").hasRole("ADMIN")
 
+                        .requestMatchers(PUT, "/api/rooms/*/users/*/buy")
+                        .hasRole("USER")
+
+                        .requestMatchers(PUT, "/api/rooms/*/users/*/buy-with-discount")
+                        .hasRole("USER")
+
+                        .requestMatchers(GET, "/api/additional-services/buy/{serviceId}/room/{roomId}/user/{userId}")
+                        .hasRole("USER")
+
+                        .requestMatchers(POST, "/api/rooms")
+                        .hasRole("ADMIN")
+
+                        .requestMatchers(PUT, "/api/rooms/{id}")
+                        .hasRole("ADMIN")
+
+                        .requestMatchers(DELETE, "/api/rooms/{id}")
+                        .hasRole("ADMIN")
+
+                        .requestMatchers(PUT, "/api/rooms/{roomId}/discount")
+                        .hasRole("ADMIN")
 
                         .anyRequest().authenticated()
-
                 )
                .httpBasic(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable());

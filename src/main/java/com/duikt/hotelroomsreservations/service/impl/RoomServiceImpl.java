@@ -13,14 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.text.DateFormat;
-import java.time.Clock;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Formatter;
 import java.util.List;
-
-import static java.util.stream.Collectors.toList;
 
 @Service
 @RequiredArgsConstructor
@@ -66,7 +60,7 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public Room buyRoom(Long roomId, Long userId, String type, double price, boolean isAvailable, LocalDateTime busyTo) {
+   public Room buyRoom(Long roomId, Long userId, LocalDateTime busyTo){
         Room room = roomRepo.findById(roomId).orElseThrow(()
                 -> new RoomNotFoudException("Room not found with id " + roomId));
 
@@ -77,19 +71,30 @@ public class RoomServiceImpl implements RoomService {
             throw new ReservationException("Room is not available");
         }
 
-        if (user.getBalance() < price) {
+        double finalPrice = (room.getDiscountTo() != null && room.getDiscountTo().isAfter(LocalDateTime.now()))
+                ? room.getPrice() * 0.8
+                : room.getPrice();
+
+        if (user.getBalance() < finalPrice) {
             throw new BalanceException("Not enough balance");
         }
 
-        LocalDateTime buyDate = LocalDateTime.now();
-
         room.setUser(user);
         room.setIsAvailable(false);
-        room.setBuyDate(buyDate);
+        room.setBuyDate(LocalDateTime.now());
         room.setBusyTo(busyTo);
-        room.setPrice(price);
-        user.setBalance(user.getBalance() - price);
+        room.getDiscountTo();
+        user.setBalance(user.getBalance() - finalPrice);
 
+        userRepo.save(user);
+        return roomRepo.save(room);
+   }
+
+    @Override
+    public Room setDiscountToRoom(Long roomId, LocalDateTime discountTo) {
+        Room room = roomRepo.findById(roomId).orElseThrow(()
+                -> new RoomNotFoudException("Room not found with id " + roomId));
+        room.setDiscountTo(discountTo);
         return roomRepo.save(room);
     }
 
@@ -119,6 +124,38 @@ public class RoomServiceImpl implements RoomService {
         });
 
         roomRepo.saveAll(expiredRooms);
+    }
+
+    @Override
+    public Room buyRoomWithDiscount(Long roomId, Long userId, LocalDateTime busyTo, LocalDateTime discountTo) {
+        Room room = roomRepo.findById(roomId).orElseThrow(
+                () -> new RoomNotFoudException("Room not found with id " + roomId)
+        );
+
+        User user = userRepo.findById(userId).orElseThrow(
+                () -> new UserNotFoundException("User not found with id " + userId)
+        );
+
+
+        double discountedPrice = room.getPrice();
+
+        if(discountTo != null && discountTo.isAfter(LocalDateTime.now())){
+                 discountedPrice = room.getPrice() * 0.8; // Apply a 20% discount
+            }
+
+            if(user.getBalance() < discountedPrice){
+                throw new BalanceException("Not enough balance");
+            }
+
+
+        room.setUser(user);
+        room.setIsAvailable(false);
+        room.setBusyTo(busyTo);
+        room.setDiscountTo(discountTo);
+        user.setBalance(user.getBalance() - discountedPrice);
+
+        userRepo.save(user);
+        return roomRepo.save(room);
     }
 
     @Override
