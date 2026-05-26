@@ -71,9 +71,8 @@ public class RoomServiceImpl implements RoomService {
             throw new ReservationException("Room is not available");
         }
 
-        // якщо знижка діє — беремо discountedPrice з БД, інакше звичайну ціну
         double finalPrice = (room.getDiscountTo() != null && room.getDiscountTo().isAfter(LocalDateTime.now()))
-                ? room.getDiscountedPrice()  // ← береться з БД яку адмін встановив
+                ? room.getDiscountedPrice()
                 : room.getPrice();
 
         if (user.getBalance() < finalPrice) {
