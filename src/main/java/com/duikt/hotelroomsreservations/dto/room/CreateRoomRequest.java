@@ -20,6 +20,8 @@ public class CreateRoomRequest {
     @DecimalMax(value = "100000.0", message = "Price must be less than 100000")
     private Double price;
 
+    private double discountedPrice;
+
     @NotNull(message = "Availability is required")
     private Boolean isAvailable;
 

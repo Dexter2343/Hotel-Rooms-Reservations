@@ -12,4 +12,5 @@ import java.time.LocalDateTime;
 public class PurchaseRoomRequest {
     private LocalDateTime busyTo;
     private LocalDateTime discountTo;
+    private double discountedPrice;
 }

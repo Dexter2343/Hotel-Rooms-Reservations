@@ -18,6 +18,7 @@ public class Room {
     private String roomNumber;
     private String type;
     private double price;
+    private double discountedPrice;
     private boolean isAvailable;
     private LocalDateTime buyDate;
     private LocalDateTime busyTo;

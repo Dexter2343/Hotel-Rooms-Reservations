@@ -71,15 +71,9 @@ public class RoomController {
         return ResponseEntity.ok(buy);
     }
 
-    @PutMapping("/rooms/{roomId}/users/{userId}/buy-with-discount")
-    public ResponseEntity<Room> buyRoomWithDiscount(@PathVariable Long roomId, @PathVariable Long userId, @RequestBody PurchaseRoomRequest request) {
-        Room buy = roomService.buyRoom(roomId, userId, request.getBusyTo());
-        return ResponseEntity.ok(buy);
-    }
-
     @PutMapping("/rooms/{roomId}/discount")
     public ResponseEntity<Room> setDiscount(@PathVariable Long roomId, @RequestBody UpdateRoomRequest request) {
-        Room discount = roomService.setDiscountToRoom(roomId, request.getDiscountTo());
+        Room discount = roomService.setDiscountToRoom(roomId, request.getDiscountTo(), request.getDiscountedPrice());
         return ResponseEntity.ok(discount);
     }
 

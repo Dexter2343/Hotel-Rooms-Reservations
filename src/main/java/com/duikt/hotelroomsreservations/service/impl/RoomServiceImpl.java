@@ -60,7 +60,7 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-   public Room buyRoom(Long roomId, Long userId, LocalDateTime busyTo){
+    public Room buyRoom(Long roomId, Long userId, LocalDateTime busyTo) {
         Room room = roomRepo.findById(roomId).orElseThrow(()
                 -> new RoomNotFoudException("Room not found with id " + roomId));
 
@@ -71,8 +71,9 @@ public class RoomServiceImpl implements RoomService {
             throw new ReservationException("Room is not available");
         }
 
+        // якщо знижка діє — беремо discountedPrice з БД, інакше звичайну ціну
         double finalPrice = (room.getDiscountTo() != null && room.getDiscountTo().isAfter(LocalDateTime.now()))
-                ? room.getPrice() * 0.8
+                ? room.getDiscountedPrice()  // ← береться з БД яку адмін встановив
                 : room.getPrice();
 
         if (user.getBalance() < finalPrice) {
@@ -83,18 +84,18 @@ public class RoomServiceImpl implements RoomService {
         room.setIsAvailable(false);
         room.setBuyDate(LocalDateTime.now());
         room.setBusyTo(busyTo);
-        room.getDiscountTo();
         user.setBalance(user.getBalance() - finalPrice);
 
         userRepo.save(user);
         return roomRepo.save(room);
-   }
+    }
 
     @Override
-    public Room setDiscountToRoom(Long roomId, LocalDateTime discountTo) {
+    public Room setDiscountToRoom(Long roomId, LocalDateTime discountTo, double discountPercent) {
         Room room = roomRepo.findById(roomId).orElseThrow(()
                 -> new RoomNotFoudException("Room not found with id " + roomId));
         room.setDiscountTo(discountTo);
+        room.setDiscountedPrice(room.getPrice() - (room.getPrice() * discountPercent / 100));
         return roomRepo.save(room);
     }
 
@@ -123,40 +124,21 @@ public class RoomServiceImpl implements RoomService {
             room.setBuyDate(null);
         });
 
+        List<Room> expiredDiscounts = roomRepo.findAll()
+                .stream()
+                .filter(r -> r.getDiscountTo() != null
+                        && r.getDiscountTo().isBefore(LocalDateTime.now()))
+                .toList();
+
+        expiredDiscounts.forEach(room -> {
+            room.setDiscountTo(null);
+            room.setDiscountedPrice(0);
+        });
+
         roomRepo.saveAll(expiredRooms);
+        roomRepo.saveAll(expiredDiscounts);
     }
 
-    @Override
-    public Room buyRoomWithDiscount(Long roomId, Long userId, LocalDateTime busyTo, LocalDateTime discountTo) {
-        Room room = roomRepo.findById(roomId).orElseThrow(
-                () -> new RoomNotFoudException("Room not found with id " + roomId)
-        );
-
-        User user = userRepo.findById(userId).orElseThrow(
-                () -> new UserNotFoundException("User not found with id " + userId)
-        );
-
-
-        double discountedPrice = room.getPrice();
-
-        if(discountTo != null && discountTo.isAfter(LocalDateTime.now())){
-                 discountedPrice = room.getPrice() * 0.8; // Apply a 20% discount
-            }
-
-            if(user.getBalance() < discountedPrice){
-                throw new BalanceException("Not enough balance");
-            }
-
-
-        room.setUser(user);
-        room.setIsAvailable(false);
-        room.setBusyTo(busyTo);
-        room.setDiscountTo(discountTo);
-        user.setBalance(user.getBalance() - discountedPrice);
-
-        userRepo.save(user);
-        return roomRepo.save(room);
-    }
 
     @Override
     public void deleteRoom(Long id) {
