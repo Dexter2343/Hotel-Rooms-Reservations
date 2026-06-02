@@ -1,7 +1,6 @@
 package com.duikt.hotelroomsreservations.controller;
 
 import com.duikt.hotelroomsreservations.dto.room.CreateRoomRequest;
-import com.duikt.hotelroomsreservations.dto.room.PurchaseRoomRequest;
 import com.duikt.hotelroomsreservations.dto.room.UpdateRoomRequest;
 import com.duikt.hotelroomsreservations.entity.Room;
 import com.duikt.hotelroomsreservations.service.RoomService;

@@ -1,7 +1,6 @@
 package com.duikt.hotelroomsreservations.service;
 
 import com.duikt.hotelroomsreservations.entity.Room;
-import com.duikt.hotelroomsreservations.entity.User;
 
 import java.time.LocalDateTime;
 import java.util.List;
